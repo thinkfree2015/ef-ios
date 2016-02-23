@@ -12,12 +12,31 @@ import React, {
     TouchableOpacity
 } from 'react-native';
 
+import Util from './util';
+import BackIcon from './back_icon';
+import ShareIcon from './share_icon';
 
 export default class Header extends Component {
 
     render(){
         let obj=this.props.initObj;
-        <Text>aasd</Text>
+        return(
+            <View style={[styles.header,styles.row]}>
+                <TouchableOpacity style={[styles.go]} onPress={this._pop}>
+                    <BackIcon/>
+                </TouchableOpacity>
+                <View style={[styles.title, styles.row]}>
+                    <Text style={styles.titlePos} numberOfLines={1}>{obj.title}</Text>
+                </View>
+                <TouchableOpacity style={[styles.go]} onPress={this._pop}>
+                    <ShareIcon/>
+                </TouchableOpacity>
+            </View>
+        )
+    }
+
+    _pop(){
+        this.props.navigator.pop();
     }
 
 }
@@ -25,26 +44,30 @@ export default class Header extends Component {
 
 const styles=StyleSheet.create({
     row:{
-        flexDirection:'row'
+        flexDirection:'row',
     },
     header:{
-        height:50,
-        backgroundColor:'#3497FF'
+        height:44* Util.pixel,
+        paddingLeft:12* Util.pixel,
+        paddingRight:12* Util.pixel,
+        borderTopWidth:1* Util.pixel,
+        borderBottomWidth:1* Util.pixel,
+        borderColor:'#e2e2e2',
+        backgroundColor:'#fff',
+        alignItems:'center',
     },
-    fontFFF:{
-        color:'#fff',
-        fontSize:17,
-        fontWeight:'bold'
+    go:{
+        left:0
     },
     title:{
-        flex:1
+        justifyContent:'center',
+        flex:1,
+        marginRight:18* Util.pixel,
     },
     titlePos:{
-        marginLeft:-20,
-        width:200
-    },
-    center:{
-        justifyContent:'center',
-        alignItems:'center'
+        color:'#333',
+        fontSize:14* Util.pixel,
     }
+
+
 })
