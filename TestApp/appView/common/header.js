@@ -11,25 +11,26 @@ import React, {
     ScrollView,
     TouchableOpacity
 } from 'react-native';
+import {styles as styles0,ArrowLeft,ArrowRight,ShareIcon} from './styles';
 
-import Util from './util';
-import BackIcon from './back_icon';
-import ShareIcon from './share_icon';
 
 export default class Header extends Component {
 
     render(){
         let obj=this.props.initObj;
         return(
-            <View style={[styles.header,styles.row]}>
-                <TouchableOpacity style={[styles.go]} onPress={this._pop}>
-                    <BackIcon/>
+            <View style={[styles0.row,styles0.center,styles0.pl12,styles0.pr12,styles0.topbor,styles0.btmbor,styles.header,]}>
+                <TouchableOpacity style={styles.h_icon} onPress={this._pop}>
+                    <ArrowLeft />
                 </TouchableOpacity>
-                <View style={[styles.title, styles.row]}>
-                    <Text style={styles.titlePos} numberOfLines={1}>{obj.title}</Text>
+                <View style={[styles0.row,styles0.flex,styles0.center]}>
+                    <Text style={[styles0.color3,styles0.fz14]} numberOfLines={1}>{obj.title}</Text>
                 </View>
-                <TouchableOpacity style={[styles.go]} onPress={this._pop}>
+                <TouchableOpacity style={[styles.h_icon]} onPress={this._pop}>
                     <ShareIcon/>
+                </TouchableOpacity>
+                <TouchableOpacity style={[styles.h_text]} onPress={this._pop}>
+                    <Text style={styles0.black}>注册</Text>
                 </TouchableOpacity>
             </View>
         )
@@ -41,33 +42,18 @@ export default class Header extends Component {
 
 }
 
-
 const styles=StyleSheet.create({
-    row:{
-        flexDirection:'row',
-    },
     header:{
-        height:44* Util.pixel,
-        paddingLeft:12* Util.pixel,
-        paddingRight:12* Util.pixel,
-        borderTopWidth:1* Util.pixel,
-        borderBottomWidth:1* Util.pixel,
+        height:44,
         borderColor:'#e2e2e2',
         backgroundColor:'#fff',
-        alignItems:'center',
     },
-    go:{
-        left:0
+    h_icon:{
+        height:16,
+        left:0,
     },
-    title:{
-        justifyContent:'center',
-        flex:1,
-        marginRight:18* Util.pixel,
-    },
-    titlePos:{
-        color:'#333',
-        fontSize:14* Util.pixel,
+    h_aLeft:{
+        borderColor:'#333',
+        marginLeft:3,
     }
-
-
 })

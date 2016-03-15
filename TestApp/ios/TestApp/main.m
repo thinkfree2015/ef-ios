@@ -16,3 +16,33 @@ int main(int argc, char * argv[]) {
     return UIApplicationMain(argc, argv, nil, NSStringFromClass([AppDelegate class]));
   }
 }
+
+/*
+ fetchData() {
+ console.log('执行fetchLoginData方法');
+ fetch('http://192.168.1.69:8001/app/login.do', {
+ method: 'POST',
+ headers: {
+ 
+ 'Content-Type': 'application/json',x
+ },
+ body: JSON.stringify({
+ username: this.state.inputPhone,
+ password: this.state.inputPass,
+ timestamp:GetTimesTamp,
+ signmsg:'339bac90e40176cd68e46abcbd0d9dc3',
+ })
+ })
+ .then((response) => response.text())
+ .then((responseText) => {
+ console.log('数据开始');
+ console.log(responseText);
+ console.log('数据--------');
+ })
+ .catch((error) => {
+ console.log('login error 开始');
+ console.warn(error);
+ console.log('login error--------');
+ });
+ }
+ */

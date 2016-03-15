@@ -9,6 +9,6 @@ import React, {
     Text,
     View
 } from 'react-native';
-import HomeView from './appView/home/home';
+import Login from './appView/login';
 
-AppRegistry.registerComponent('TestApp', () => HomeView);
+AppRegistry.registerComponent('TestApp', () => Login);
