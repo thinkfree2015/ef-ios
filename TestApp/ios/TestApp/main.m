@@ -14,7 +14,7 @@
 int main(int argc, char * argv[]) {
   @autoreleasepool {
     return UIApplicationMain(argc, argv, nil, NSStringFromClass([AppDelegate class]));
-    NSLog(@"1234");
+    NSLog(@"12");
   }
 }
 
