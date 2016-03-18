@@ -15,18 +15,61 @@
 import React, {Component,StyleSheet,View,Text,Image,TextInput,TouchableOpacity} from 'react-native';
 import {styles as styles0,Header,ArrowRight,sizeWidth,sizeHeight} from './../common/styles';
 import {LoginInput,LoginButton,Authcode} from './../common/nobusiness';
-
+import project from './../projects/project';
 
 
 
 //注册成功后的组件
 export default class regSucceedView extends Component {
+     getregSucceedJsonData =()=>{
+        var date = '';
+        putJson('username',this.state.inputPhone);
+        putJson('timestamp',GetTimesTamp);
+        putJson('password',this.state.inputPass)
+        console.log('获取登陆的GetTimesTamp  ',GetTimesTamp);
+        date = getJson();
+        console.log('打印大');
+        console.log('111111111111'+date);
+        return date;
+    }
+    fetchData() {
+        console.log('执行fetchLoginData方法');
+        fetch('http://192.168.1.69:8001/app/login.do', {
+              method: 'POST',
+              headers: {
+              'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(this.getregSucceedJsonData())
+              })
+        .then((response) => response.json())
+        .then((responseText) => {
+              console.log('login数据开始');
+              console.log(responseText);
+              console.log('  login我爱你  '+responseText.resultCode);
+              if(responseText.resultCode ==0){
+                console.log('跳转到主页');
+                this.props.navigator.push({// 活动跳转，以Navigator为容器管理活动页面
+                component: project,
+        
+              })
+              }
+              })
+        .catch((error) => {
+               console.log('login日 error 开始');
+               console.warn(error);
+               console.log('login日 error--------');
+               });
+    }
+    completePress(){
+
+        console.log('登陆测试成功');
+    }
     render() {
         return (
             <View style={styles.login}>
                 <Header
                     title={'基本资料'}
-                    complete={true}
+                    complete={onPress={(this.completePress.bind(this))}}
                 />
                 <View style={[styles0.center,styles0.pt12,styles0.pb12,styles0.topbor,styles0.btmbor,styles0.mt9,styles.l_head]}>
                     <TouchableOpacity style={[styles0.vertical,styles0.center,styles.l_head_btn]}>

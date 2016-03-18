@@ -17,7 +17,8 @@ var GetTimesTamp = new Date().getTime();
 import {putJson,getJson} from './../util/jsonUtil'
 import hex_sha1 from './../util/sha1'
 import MD5 from './../util/md5'
-
+import project from './../projects/project';
+import login from './../login/login'
 //主页
 export default class Register extends Component {
     getAudoJsonData =()=>{
@@ -149,6 +150,10 @@ export default class Register extends Component {
               console.log(responseText);
               console.log('  注册我爱你  '+responseText.resultCode);
               if(responseText.resultCode ==0){
+                this.props.navigator.push({// 活动跳转，以Navigator为容器管理活动页面
+                component: project,
+                title: 'r',
+              })
               }
               })
         .catch((error) => {
@@ -157,6 +162,13 @@ export default class Register extends Component {
                console.log('注册 error--------');
                });
         
+    }
+    NavigatorSkipToLogin(){
+        console.log('跳转到主页');
+        this.props.navigator.push({// 活动跳转，以Navigator为容器管理活动页面
+                component: login,
+        
+              })
     }
     render() {
         return (
@@ -181,10 +193,9 @@ export default class Register extends Component {
 
                 <View style={[styles0.flex,styles0.row,styles.btn_view]}>
                     <TouchableOpacity style={[styles0.right,styles0.flex,styles.login_text]}>
-                        <Text style={[styles0.fz11,styles0.color3b]}>立即登录</Text>
+                        <Text style={[styles0.fz11,styles0.color3b]} onPress={this.NavigatorSkipToLogin.bind(this)}>立即登录</Text>
                     </TouchableOpacity>
                 </View>
-
             </View>
         )
     }

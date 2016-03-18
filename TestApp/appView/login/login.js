@@ -1,5 +1,9 @@
 /**
  * Created by qiuxi on 2016/2/25.
+ this.props.navigator.push({// 活动跳转，以Navigator为容器管理活动页面
+                component: project,
+                title: 'r',
+              })
  */
 import React, {
     Component,
@@ -9,7 +13,7 @@ import React, {
     Text,
     TextInput,
     TouchableOpacity,
-    NavgatorIOS,
+    Navgator,
     TouchableHighligt,
     NavigatorIOS,
 } from 'react-native';
@@ -19,6 +23,12 @@ import {LoginInput,LoginButton} from './../common/nobusiness';
 import {putJson,getJson} from './../util/jsonUtil';
 import hex_sha1 from './../util/sha1';
 import MD5 from './../util/md5';
+
+import project from './../projects/project';
+import register from './../login/register';
+import forgetPwd from './../login/forgetPwd';
+
+
 var GetTimesTamp = new Date().getTime();
 
 
@@ -53,8 +63,11 @@ export default class Login extends Component {
               console.log(responseText);
               console.log('  login我爱你  '+responseText.resultCode);
               if(responseText.resultCode ==0){
-              
-
+                console.log('跳转到主页');
+                this.props.navigator.push({// 活动跳转，以Navigator为容器管理活动页面
+                component: project,
+        
+              })
               }
               })
         .catch((error) => {
@@ -65,14 +78,36 @@ export default class Login extends Component {
     }
     
     
-    NavigatorSkip(){
+    NavigatorSkipToProject(){
         console.log('跳转到主页');
-       
-
+        this.props.navigator.push({// 活动跳转，以Navigator为容器管理活动页面
+                component: project,
+        
+              })
+    }
+    NavigatorSkipToRegister(){
+        console.log('跳转到主页');
+        this.props.navigator.push({// 活动跳转，以Navigator为容器管理活动页面
+                component: register,
+        
+              })
     }
     
+    NavigatorSkipToForgetPwd(){
+        console.log('跳转到主页');
+        this.props.navigator.push({// 活动跳转，以Navigator为容器管理活动页面
+                component: forgetPwd,
+        
+              })
+    }
+    
+    
     render() {
+        
+    
+
         return (
+
             <View style={styles.login}>
                 <Header
                     title={'登录'}
@@ -80,14 +115,15 @@ export default class Login extends Component {
                 />
                 <LoginInput newObj={{placeholder:'请输入手机号/e飞蚁账号'}} onChangeText={(text) => this.setState({inputPhone:text})}/>
                 <LoginInput newObj={{placeholder:'请输入密码'}} onChangeText={(text) => this.setState({inputPass:text})}/>
-                <LoginButton newObj={{text:'登     录'}}onPress={(this.NavigatorSkip.bind(this))}/>
-                <View style={[styles0.flex,styles0.row,styles.login_p]}>
+                <LoginButton newObj={{text:'登     录'}} onPress={(this.NavigatorSkipToProject.bind(this))}/>
+                <View style={[styles0.flex,styles0.row,styles.login_p]} >
                     <TouchableOpacity style={[styles0.left,styles0.flex,styles.login_text]}>
-                        <Text style={[styles0.fz11,styles0.gray]}>快速注册</Text>
+                        <Text style={[styles0.fz11,styles0.gray]} onPress={(this.NavigatorSkipToRegister.bind(this))} >快速注册</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={[styles0.right,styles0.flex,styles.login_text]}>
-                        <Text style={[styles0.fz11,styles0.color3b]}>忘记密码</Text>
+                    <TouchableOpacity style={[styles0.right,styles0.flex,styles.login_text]} >
+                        <Text style={[styles0.fz11,styles0.color3b]} onPress={this.NavigatorSkipToForgetPwd.bind(this)}>忘记密码</Text>
                     </TouchableOpacity>
+
                 </View>
 
 
