@@ -5,21 +5,18 @@ import React, {Component,StyleSheet,Image,View,Text,ScrollView,TouchableOpacity}
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 import {HeadMaster,ProgressBar} from './../common/business';
 import {styles as styles0} from './../common/styles';
-import Financing from './financing/financing'
 
 
 //主页面
 export default class Home extends Component {
     render() {
         return (
-            <View style={styles.container}>
             <ScrollableTabView tabBarUnderlineColor="#000" tabBarActiveTextColor ="#000" tabBarInactiveTextColor="#000">
                 <FinancingList tabLabel="融资"/>
                 <MakeList tabLabel="创作" />
                 <AuctionList tabLabel="拍卖" />
                 <AwardList tabLabel="抽奖" />
             </ScrollableTabView>
-            </View>
         )
     }
 }
@@ -56,7 +53,33 @@ class FinancingList extends React.Component {
     render() {
         return (
             <View style={styles0.flex}>
-              <Financing/>
+                <ScrollView>
+                    <View style={[styles0.btmbor,styles0.pb12,styles.pj_items]}>
+                        <ImgModule
+                            pic={'http://pro.efeiyi.com/product/%E8%8C%B6%E9%A9%AC%E5%8F%A4%E9%81%93120160113174841.jpg@!product-details-picture'}
+                            title={'项目详情'}
+                            description={'大师手作独品，倾心定制,独一无二,灵感再现倾心定制,独一无二'}
+                        />
+
+                        <HeadMaster newObj={{
+                            name:'朱炳仁',
+                            description:'铜雕技艺国家级传承人',
+                            pic:'http://pro.efeiyi.com/product/%E8%8C%B6%E9%A9%AC%E5%8F%A4%E9%81%93120160113174841.jpg@!product-details-picture'
+                        }}/>
+
+                        <ProgressBar newObj={{
+                            group1Num:'3002元',
+                            group1Text:'目标金额',
+                            group2Num:'24时24分24秒',
+                            group2Text:'剩余时间',
+                            group3Num:'10000',
+                            group3Text:'投资人数',
+                        }}/>
+                    </View>
+
+
+                </ScrollView>
+
             </View>
         )
     }
@@ -246,10 +269,6 @@ class AwardList extends React.Component {
 
 
 const styles=StyleSheet.create({
-   container: {
-    flex: 1,
-    marginTop: 20,
-  },
     pj_items:{
         marginTop:8
     },

@@ -1,5 +1,6 @@
 /**
  * Created by qiuxi on 2016/2/25.
+ autoFocus={this.props.forget} 
  */
 import React,{
     Component,
@@ -20,6 +21,8 @@ export class LoginInput extends React.Component{
      return(
          <View style={[styles0.bor,styles.loginView]}>
              <TextInput
+                 autoFocus={true}
+                 onBlur={this.props.onBlur}
                  placeholderTextColor="#ccc"
                  placeholder={obj.placeholder}
                  value={obj.value}
@@ -58,7 +61,8 @@ export class Authcode extends React.Component{
                         placeholder="请输入短信验证码"
                         style={[styles0.fz11,styles0.flex,styles0.pl12,styles0.pr12,styles.input]}
                         onChangeText={this.props.onChangeText}
-                    />
+                        onBlur={this.props.onBlur}
+                        />
                     <TouchableOpacity style={[styles0.center,styles0.vertical,styles.input_yzm]} onPress={this.props.onPress}>
                         <Text style={[styles0.fz11,styles0.gray]}>{obj.text}</Text>
                     </TouchableOpacity>

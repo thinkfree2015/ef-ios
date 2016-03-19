@@ -1,5 +1,7 @@
 /**
  * Created by qiuxi on 2016/2/25.
+ onPress={this.props.autoFocus != true ? this.AuthcodeTest.bind(this) : null}
+ forget={this.AuthcodeTest.bind(this)}
  */
 import React, {
     Component,
@@ -36,7 +38,7 @@ export default class Register extends Component {
         var date = '';
         putJson('timestamp',GetTimesTamp);
         console.log('短信验证的时间GetTimesTamp  ',GetTimesTamp);
-        putJson('code','074597');
+        putJson('code','111111');
         putJson('username',this.state.inputPhone);
         date = getJson();
         console.log('打印大');
@@ -100,7 +102,7 @@ export default class Register extends Component {
               console.log(responseText);
               console.log('  短信我爱你  '+responseText.resultCode);
               if(responseText.resultCode ==0){
-              
+              this.state.registerThings;
               }
               })
         .catch((error) => {
@@ -125,6 +127,7 @@ export default class Register extends Component {
               console.log(responseText);
               console.log('  短信验证我爱你  '+responseText.resultCode);
               if(responseText.resultCode ==0){
+
               }
               })
         .catch((error) => {
@@ -170,6 +173,9 @@ export default class Register extends Component {
         
               })
     }
+    AuthcodeTest=()=>{
+      console.log('自动发送验证');
+    }
     render() {
         return (
             <View style={styles.login}>
@@ -183,12 +189,16 @@ export default class Register extends Component {
                 }} onChangeText={(text) => this.setState({inputPhone:text})}/>
                 <Authcode
                     newObj={{text:'获取验证码'}}
-                onPress={(this.AuthRequest.bind(this))}
+                    onPress={(this.sendMeg.bind(this))}
+                    onBlur= {this.examineSendMeg.bind(this)}
                 />
                 <LoginInput newObj={{placeholder:'请输入密码'}}
                 onChangeText={(text) => this.setState({inputPass1:Text})}
+                
                 />
-                <LoginInput newObj={{placeholder:'请再次输入密码'}} onChangeText={(text) => this.setState({inputPass:Text})}/>
+                <LoginInput newObj={{placeholder:'请再次输入密码'}} onChangeText={(text) => this.setState({inputPass:Text})}
+                />
+
                 <LoginButton newObj={{text:'注     册'}} onPress={(this.registerThings.bind(this))}/>
 
                 <View style={[styles0.flex,styles0.row,styles.btn_view]}>

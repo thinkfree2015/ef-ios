@@ -168,6 +168,9 @@ export default class Login extends Component {
                });
         
     }
+       AuthcodeTest=()=>{
+      console.log('自动发送验证');
+    }
     render() {
         return (
                 <View style={styles.login}>
@@ -178,8 +181,12 @@ export default class Login extends Component {
                 <LoginInput newObj={{
                 placeholder:'请输入手机号'
                 }} onChangeText={(text) => this.setState({inputPhone:text})}/>
-                <Authcode newObj={{text:'请输入验证码'}} onPress={(this.examineSendMeg.bind(this))}/>
-                <LoginInput newObj={{placeholder:'设置密码'}} onChangeText={(text) => this.setState({inputPass:text})}/>
+                <Authcode newObj={{text:'请输入验证码'}} onPress={(this.examineSendMeg.bind(this))} 
+                onBlur= {this.examineSendMeg.bind(this)} />
+                <LoginInput newObj={{placeholder:'设置密码'}}
+                 onChangeText={(text) => this.setState({inputPass:text})}
+    
+                />
                 <LoginButton newObj={{text:'确     定'}} onPress={(this.registerThings.bind(this))}/>
                 </View>
                 )

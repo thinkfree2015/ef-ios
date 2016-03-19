@@ -11,41 +11,56 @@
  </TouchableOpacity>
  </View>
  </View>
+
+
+ <View style={[styles0.vertical,styles.xx_ipt]}>
+                        <Text style={[styles0.fz12,styles0.gray,{textAlign:"right"}]}>女</Text>
+                    </View>
+                    <View style={[styles0.right,styles0.flex]}>
+                        <View style={[styles0.arrow,styles.arrow]}></View>
+                    </View>
  */
 import React, {Component,StyleSheet,View,Text,Image,TextInput,TouchableOpacity} from 'react-native';
 import {styles as styles0,Header,ArrowRight,sizeWidth,sizeHeight} from './../common/styles';
 import {LoginInput,LoginButton,Authcode} from './../common/nobusiness';
 import project from './../projects/project';
 
-
+var GetTimesTamp = new Date().getTime();
+import {putJson,getJson} from './../util/jsonUtil'
 
 //注册成功后的组件
 export default class regSucceedView extends Component {
+
      getregSucceedJsonData =()=>{
         var date = '';
-        putJson('username',this.state.inputPhone);
+        putJson('username','13366047553');
         putJson('timestamp',GetTimesTamp);
-        putJson('password',this.state.inputPass)
-        console.log('获取登陆的GetTimesTamp  ',GetTimesTamp);
+        putJson('password','Dx11111111');
+        putJson('nickname','Dx');
+        putJson('sex','男');
+        
+        console.log('获取注册成功的GetTimesTamp  ',GetTimesTamp);
         date = getJson();
         console.log('打印大');
         console.log('111111111111'+date);
         return date;
     }
-    fetchData() {
+    fetchData =()=> {
         console.log('执行fetchLoginData方法');
-        fetch('http://192.168.1.69:8001/app/login.do', {
+        fetch('http://192.168.1.69:8001/app/completeUserInfo.do', {
               method: 'POST',
+
               headers: {
               'Content-Type': 'application/json',
+               'charset':'utf8',
               },
               body: JSON.stringify(this.getregSucceedJsonData())
               })
         .then((response) => response.json())
         .then((responseText) => {
-              console.log('login数据开始');
+              console.log('注册成功数据开始');
               console.log(responseText);
-              console.log('  login我爱你  '+responseText.resultCode);
+              console.log('  注册成功我爱你  '+responseText.resultCode);
               if(responseText.resultCode ==0){
                 console.log('跳转到主页');
                 this.props.navigator.push({// 活动跳转，以Navigator为容器管理活动页面
@@ -60,21 +75,23 @@ export default class regSucceedView extends Component {
                console.log('login日 error--------');
                });
     }
-    completePress(){
+    completePress =()=>{
 
-        console.log('登陆测试成功');
+        console.log('注册测试成功');
+        
     }
     render() {
         return (
             <View style={styles.login}>
                 <Header
                     title={'基本资料'}
-                    complete={onPress={(this.completePress.bind(this))}}
+                    complete={true}
+
                 />
                 <View style={[styles0.center,styles0.pt12,styles0.pb12,styles0.topbor,styles0.btmbor,styles0.mt9,styles.l_head]}>
                     <TouchableOpacity style={[styles0.vertical,styles0.center,styles.l_head_btn]}>
                         <Image style={styles.l_head_img} source={{uri:'http://pro.efeiyi.com/product/%E8%8C%B6%E9%A9%AC%E5%8F%A4%E9%81%93120160113174841.jpg@!product-details-picture'}} />
-                        <Text style={[styles0.fz10,styles0.white,styles.l_head_txt]}>添加头像</Text>
+                        <Text style={[styles0.fz10,styles0.white,styles.l_head_txt]}  onPress={(this.fetchData.bind(this))}>添加头像</Text>
                     </TouchableOpacity>
                 </View>
 
@@ -94,23 +111,7 @@ export default class regSucceedView extends Component {
                     <View style={styles0.vertical}>
                         <Text style={[styles0.black,styles0.fz12,styles.xx_text]}>性别</Text>
                     </View>
-                    <View style={[styles0.vertical,styles.xx_ipt]}>
-                        <Text style={[styles0.fz12,styles0.gray,{textAlign:"right"}]}>女</Text>
-                    </View>
-                    <View style={[styles0.right,styles0.flex]}>
-                        <View style={[styles0.arrow,styles.arrow]}></View>
-                    </View>
-                </View>
-                
-                <View style={[styles0.alert,{width:sizeWidth,height:sizeHeight}]}>
-                <View style={[styles.popup_box,{width:sizeWidth-24}]}>
-                <TouchableOpacity style={[styles0.vertical,styles0.center,styles0.btmbor,styles.modbtn,{height:45,flex:1}]}>
-                <Text style={[styles0.fz12,styles0.black]}>男</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={[styles0.vertical,styles0.center,{height:45,flex:1}]}>
-                <Text style={[styles0.fz12,styles0.black]}>女</Text>
-                </TouchableOpacity>
-                </View>
+                    
                 </View>
                 
             </View>

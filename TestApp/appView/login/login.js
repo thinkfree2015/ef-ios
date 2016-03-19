@@ -34,7 +34,15 @@ var GetTimesTamp = new Date().getTime();
 
 //主页
 export default class Login extends Component {
-    
+
+    constructor(props) {
+        super(props);
+        // 初始状态
+        this.state = {
+            inputVCode:''
+            
+        };
+    }
     
     getLoginJsonData =()=>{
         var date = '';
@@ -103,9 +111,6 @@ export default class Login extends Component {
     
     
     render() {
-        
-    
-
         return (
 
             <View style={styles.login}>
@@ -125,7 +130,6 @@ export default class Login extends Component {
                     </TouchableOpacity>
 
                 </View>
-
 
                 <View style={[styles0.flex,styles.login_p]}>
                     <View style={[styles0.row,styles0.center,styles0.flex,styles.login_pTxt]}>
