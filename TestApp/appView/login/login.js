@@ -33,8 +33,7 @@ import MD5 from './../util/md5';
 import project from './../projects/project';
 import register from './../login/register';
 import forgetPwd from './../login/forgetPwd';
-
-
+import RequestUtils from './../util/requestUtil';
 var GetTimesTamp = new Date().getTime();
 var USERNAME_KEY_ONE = '@TestApp:key_one';
 var USERPWD_KEY_ONE = '@TestApp:key_message';
@@ -97,10 +96,8 @@ export default class Login extends Component {
     
     NavigatorSkipToProject(){
         console.log('跳转到主页');
-        this.props.navigator.push({// 活动跳转，以Navigator为容器管理活动页面
-                component: project,
-        
-              })
+        RequestUtils.getContents();
+
     }
     NavigatorSkipToRegister(){
         console.log('跳转到主页');

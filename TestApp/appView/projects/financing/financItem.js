@@ -28,12 +28,13 @@ class ImgModule extends React.Component{
 
 class financItem extends Component {
   render() {
+    var atr=this.props.item.artwork;
     return (
       <View style={styles.viewHeight}>
           <ImgModule
-              pic={'http://pro.efeiyi.com/product/%E8%8C%B6%E9%A9%AC%E5%8F%A4%E9%81%93120160113174841.jpg@!product-details-picture'}
-              title={'项目详情'}
-              description={'大师手作独品，倾心定制,独一无二,灵感再现倾心定制,独一无二'}
+              pic={atr.picture_url}
+              title={atr.id}
+              description={atr.brief}
            />
            <HeadMaster newObj={{
                name:'朱炳仁',
