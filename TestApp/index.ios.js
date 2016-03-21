@@ -16,6 +16,7 @@ import register from './appView/login/register';
 import ReactNativeDemo from './appView/util/pickIamge';
 import forget from './appView/login/forgetPwd';
 import tabMain from './appView/tabbar/tabMain';
+import projectDetails from './appView/projects/projectDetails';
 
 
 class App extends Component{

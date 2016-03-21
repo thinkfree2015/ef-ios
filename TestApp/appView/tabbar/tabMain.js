@@ -4,6 +4,7 @@ import React, { Component } from 'react-native';
 import TabBar from './TabBar';
 import TabGroup from './TabGroup';
 import Home from '../projects/project';
+import Navigation from '../common/navigation';
 
 const {
   StyleSheet,
@@ -31,7 +32,7 @@ class tabMain extends Component {
               selected={true}
               badge={this.state.badges[0]}
               title='首页' >
-              <Home />
+              <Navigation component={Home} />
             </TabBar.Item>
             <TabBar.Item
               icon={require('./start_normall.png')}

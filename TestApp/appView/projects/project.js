@@ -1,12 +1,16 @@
 /**
  * Created by jiuxuan00 on 2016/2/1.
  */
-import React, {Component,StyleSheet,Image,View,Text,ScrollView,TouchableOpacity} from 'react-native';
+import React, {Component,StyleSheet,Image,View,Text,ScrollView,TouchableOpacity,ListView,RefreshControl,TouchableHighlight} from 'react-native';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 import {HeadMaster,ProgressBar} from './../common/business';
 import {styles as styles0} from './../common/styles';
-import Financing from './financing/financing'
-
+import RequestUtils from './../util/requestUtil';
+import {putJson,getJson} from './../util/jsonUtil';
+import Animation from './../projects/financing/Animation'
+import projectDetails from './projectDetails';
+import FinanItem from './../projects/financing/financItem';
+import NavigationBar from 'react-native-navigationbar'
 
 //主页面
 export default class Home extends Component {
@@ -53,13 +57,129 @@ class TextLine extends React.Component{
 
 //融资
 class FinancingList extends React.Component {
-    render() {
-        return (
-            <View style={styles0.flex}>
-              <Financing/>
-            </View>
-        )
+    constructor (props) {
+        super(props)
+        this.pageIndex = 0
+        this.state = {
+            dataSource: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
+            loadMore: false,
+            isRefreshing: false,
+            isError: false
+        }
     }
+
+    componentDidMount() {
+        this._refresh();
+    }
+    getLoginJsonData(pageNum){
+        var date = '';
+        putJson('pageSize',pageNum);
+        putJson('timestamp',new Date().getTime());
+        putJson('pageNum','1')
+        date = getJson();
+        return date;
+    }
+
+    render() {
+        this.state.isError = false
+        return (
+            <ListView
+            style={{flex:1}}
+            dataSource={this.state.dataSource}
+            onEndReached={this._loadmore.bind(this)}
+            renderFooter={this._renderFooter.bind(this)}
+            renderRow={this.renderRow.bind(this)}
+            onEndReachedThreshold = {29}
+            refreshControl={
+                    <RefreshControl
+                    refreshing={this.state.isRefreshing}
+                    onRefresh={this._refresh.bind(this)}
+                    tintColor='#aaaaaa'
+                    title='Loading...'
+                    progressBackgroundColor='#aaaaaa'/>
+            }/>
+        );
+    }
+
+    _renderFooter () {
+        return (
+            this.state.loadMore
+            ? (<View style={[styles.indicatorWrapper]}>
+                <Animation timingLength = {50} duration = {500} bodyColor={'#aaaaaa'}/>
+                </View>)
+            : (<View/>)
+            )
+    }
+
+    async _refresh () {
+        if (this.state.isRefreshing) {
+            return
+        }
+        this.setState({isRefreshing: true})
+        this.pageIndex=2;
+        RequestUtils.ajax({
+            url:'http://192.168.1.69:8001/app/investorIndex.do',
+            method: 'post',
+            data:this.getLoginJsonData(this.pageIndex),
+            success:(data)=>{
+                if (data.resultCode==0) {
+                    this.setState({
+                    dataSource: this.state.dataSource.cloneWithRows(data.objectList),
+                    isRefreshing: false
+                 })
+            }
+        },
+        failure:(data)=>{
+            this.setState({
+            isError: true,
+            isRefreshing: false
+            })}
+        })
+    }
+
+    async _loadmore () {
+        if (this.state.loadMore) {
+            return
+         }
+        this.setState({loadMore: true})
+        this.pageIndex += 2
+        RequestUtils.ajax({
+            url:'http://192.168.1.69:8001/app/investorIndex.do',
+            method: 'post',
+            data:this.getLoginJsonData(this.pageIndex),
+            success:(data)=>{
+            if (data.resultCode==0) {
+                    this.setState({
+                    dataSource: this.state.dataSource.cloneWithRows(data.objectList),
+                    loadMore: false
+             })
+            }
+        },
+        failure:(data)=>{
+            this.setState({
+            isError: true,
+            loadMore: false
+            })}
+        })
+    }
+
+    renderRow(contentData, sectionID, highlightRow){
+        return(
+            <TouchableHighlight onPress= {this._skipIntoContent.bind(this,contentData)
+            }>
+            <View style={styles.row}>
+                <FinanItem item={contentData}></FinanItem>
+            </View>
+            </TouchableHighlight>)
+    }
+
+    _skipIntoContent (contentData) {
+        this.props.navigator.push({// 活动跳转，以Navigator为容器管理活动页面
+                component: project,
+                 title:'dd'
+              })
+    }
+
 }
 
 //创作
@@ -296,6 +416,19 @@ const styles=StyleSheet.create({
         bottom:23,
         left:0,
     },
-
+     flex_1:{
+        flex:1,
+        marginTop:5,
+    },
+    listView: {
+        paddingTop: 20,
+        backgroundColor: '#F5FCFF',
+    },
+    indicatorWrapper: {
+        height: 45,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#252528'
+  },
 
 })
