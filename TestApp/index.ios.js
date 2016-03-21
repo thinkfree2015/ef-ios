@@ -23,7 +23,7 @@ class App extends Component{
 		return (
 		<Navigator style = {{flex:1}}
         initialRoute={{
-          component: tabMain
+          component: register
         }}
         renderScene={(route, navigator) => { // 用来渲染navigator栈顶的route里的component页面
           // route={component: xxx, name: xxx, ...}， navigator.......route 用来在对应界面获取其他键值

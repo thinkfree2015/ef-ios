@@ -11,16 +11,22 @@ import React, {
     TextInput,
     TouchableOpacity,
     TouchableHighlight,
+    AsyncStorage,
 } from 'react-native';
+
+var GetTimesTamp = new Date().getTime();
+var USERNAME_KEY_ONE = '@TestApp:key_one';
+var USERPWD_KEY_ONE = '@TestApp:key_message';
+
 import {styles as styles0,Header} from './../common/styles';
 import {LoginInput,LoginButton,Authcode} from './../common/nobusiness';
-var GetTimesTamp = new Date().getTime();
 
 import {putJson,getJson} from './../util/jsonUtil'
 import hex_sha1 from './../util/sha1'
 import MD5 from './../util/md5'
 import project from './../projects/project';
 import login from './../login/login'
+
 //主页
 export default class Register extends Component {
     getAudoJsonData =()=>{
@@ -59,9 +65,7 @@ export default class Register extends Component {
     }
     
     
-    
     AuthRequest(){
-        
         console.log('获取验证码日志');
         fetch('http://192.168.1.69:8001/app/checkUserName.do', {
               method: 'POST',
@@ -140,6 +144,7 @@ export default class Register extends Component {
     registerThings(){
         console.log('获取注册日志');
         console.log('注册美的     '+this.getRegisterJsonData());
+        this.state. _saveValue_One;
         fetch('http://192.168.1.69:8001/app/register.do', {
               method: 'POST',
               headers: {
@@ -174,8 +179,22 @@ export default class Register extends Component {
               })
     }
     AuthcodeTest=()=>{
-      console.log('自动发送验证');
-    }
+      console.log('///////////////////////');
+   }
+    async _saveValue_One(){
+      try{
+
+         await AsyncStorage.setItem(USERNAME_KEY_ONE,this.state.inputPhone);
+         await AsyncStorage.setItem(USERPWD_KEY_ONE,this.state.inputPass);
+         var value=await AsyncStorage.getItem(USERNAME_KEY_ONE);
+         console.log('/////'+value);
+
+      }catch(error){
+          console.log(error);
+      }
+  }
+ 
+
     render() {
         return (
             <View style={styles.login}>

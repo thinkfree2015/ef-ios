@@ -4,6 +4,11 @@
                 component: project,
                 title: 'r',
               })
+
+
+
+              var USERNAME_KEY_ONE = '@TestApp:key_one';
+var USERPWD_KEY_ONE = '@TestApp:key_message';
  */
 import React, {
     Component,
@@ -16,6 +21,7 @@ import React, {
     Navgator,
     TouchableHighligt,
     NavigatorIOS,
+    AsyncStorage,
 } from 'react-native';
 
 import {styles as styles0,Header,LogoWechat,LogoSina,LogoQQ} from './../common/styles';
@@ -30,7 +36,8 @@ import forgetPwd from './../login/forgetPwd';
 
 
 var GetTimesTamp = new Date().getTime();
-
+var USERNAME_KEY_ONE = '@TestApp:key_one';
+var USERPWD_KEY_ONE = '@TestApp:key_message';
 
 //主页
 export default class Login extends Component {
@@ -58,6 +65,7 @@ export default class Login extends Component {
     
     fetchData() {
         console.log('执行fetchLoginData方法');
+         this.props._saveValue_One;
         fetch('http://192.168.1.69:8001/app/login.do', {
               method: 'POST',
               headers: {
@@ -72,6 +80,7 @@ export default class Login extends Component {
               console.log('  login我爱你  '+responseText.resultCode);
               if(responseText.resultCode ==0){
                 console.log('跳转到主页');
+                this.props._saveValue_One;
                 this.props.navigator.push({// 活动跳转，以Navigator为容器管理活动页面
                 component: project,
         
@@ -105,11 +114,19 @@ export default class Login extends Component {
         console.log('跳转到主页');
         this.props.navigator.push({// 活动跳转，以Navigator为容器管理活动页面
                 component: forgetPwd,
-        
               })
     }
     
-    
+    async _saveValue_One(){
+      try{
+        await AsyncStorage.setItem(USERNAME_KEY_ONE,this.state.inputPhone);
+         await AsyncStorage.setItem(USERPWD_KEY_ONE,this.state.inputPass);
+         var value=await AsyncStorage.getItem(USERNAME_KEY_ONE);
+         console.log('/////'+value);
+      }catch(error){
+          console.log(error);
+      }
+  }
     render() {
         return (
 
@@ -120,7 +137,7 @@ export default class Login extends Component {
                 />
                 <LoginInput newObj={{placeholder:'请输入手机号/e飞蚁账号'}} onChangeText={(text) => this.setState({inputPhone:text})}/>
                 <LoginInput newObj={{placeholder:'请输入密码'}} onChangeText={(text) => this.setState({inputPass:text})}/>
-                <LoginButton newObj={{text:'登     录'}} onPress={(this.NavigatorSkipToProject.bind(this))}/>
+                <LoginButton newObj={{text:'登     录'}} onPress={(this._saveValue_One.bind(this))}/>
                 <View style={[styles0.flex,styles0.row,styles.login_p]} >
                     <TouchableOpacity style={[styles0.left,styles0.flex,styles.login_text]}>
                         <Text style={[styles0.fz11,styles0.gray]} onPress={(this.NavigatorSkipToRegister.bind(this))} >快速注册</Text>
@@ -176,36 +193,5 @@ const styles=StyleSheet.create({
         marginTop:15
     }
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
