@@ -53,7 +53,7 @@ export class Header extends Component {
     render(){
         const IconShare=require('./../image/share_icon.png'); //分享图标
         return(
-            <View style={[styles.row,styles.center,styles.pl12,styles.pr12,styles.topbor,styles.btmbor,styles.bgf,styles.header]}>
+            <View style={[styles.row,styles.center,styles.pl12,styles.pr12,styles.btmbor,styles.bgf,styles.header]}>
                 {
                     //返回上一页
                     this.props.BackIcon?
@@ -228,7 +228,7 @@ export const styles=StyleSheet.create({
     //弹出层背景
     alert:{backgroundColor:'rgba(0,0,0,.5)',position:'absolute',top:0,left:0},
     //Header
-    header:{height:44},
+    header:{height:44,marginTop:20},
     h_left:{height:16,left:0,position:'absolute',top:14,left:12},
     h_right:{position:'absolute',top:12,right:12},
     //箭头

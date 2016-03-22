@@ -28,7 +28,7 @@ class Animation extends Component {
   static defaultProps = {
     timingLength: 50,
     duration: 500,
-    bodyColor: 'white',
+    bodyColor: 'black',
     radius: 5
   };
 

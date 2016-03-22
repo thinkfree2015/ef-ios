@@ -4,12 +4,13 @@
 import React, {Component,StyleSheet,Image,View,Text,ScrollView,TouchableOpacity,ListView,RefreshControl,TouchableHighlight} from 'react-native';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 import {HeadMaster,ProgressBar} from './../common/business';
-import {styles as styles0} from './../common/styles';
+import {styles as styles0,sizeWidth} from './../common/styles';
 import RequestUtils from './../util/requestUtil';
 import {putJson,getJson} from './../util/jsonUtil';
 import Animation from './../projects/financing/Animation';
+
+import SnackBar from './../projects/financing/SnackBar';
 import projectDetails from './projectDetails';
-import FinanItem from './../projects/financing/financItem';
 
 
 //主页面
@@ -18,10 +19,10 @@ export default class Home extends Component {
         return (
             <View style={styles.container}>
             <ScrollableTabView tabBarUnderlineColor="#000" tabBarActiveTextColor ="#000" tabBarInactiveTextColor="#000">
-                <FinancingList tabLabel="融资"/>
-                <MakeList tabLabel="创作" />
-                <AuctionList tabLabel="拍卖" />
-                <AwardList tabLabel="抽奖" />
+                <FinancingList tabLabel="融资" navigator={this.props.navigator}/>
+                <MakeList tabLabel="创作" navigator={this.props.navigator}/>
+                <AuctionList tabLabel="拍卖" navigator={this.props.navigator}/>
+                <AwardList tabLabel="抽奖" navigator={this.props.navigator}/>
             </ScrollableTabView>
             </View>
         )
@@ -81,23 +82,30 @@ class FinancingList extends React.Component {
     }
 
     render() {
+        let snackBar = this.state.isError
+            ? (<SnackBar />)
+            : null
         this.state.isError = false
         return (
-            <ListView
-            style={{flex:1}}
-            dataSource={this.state.dataSource}
-            onEndReached={this._loadmore.bind(this)}
-            renderFooter={this._renderFooter.bind(this)}
-            renderRow={this.renderRow.bind(this)}
-            onEndReachedThreshold = {29}
-            refreshControl={
-                    <RefreshControl
-                    refreshing={this.state.isRefreshing}
-                    onRefresh={this._refresh.bind(this)}
-                    tintColor='#aaaaaa'
-                    title='Loading...'
-                    progressBackgroundColor='#aaaaaa'/>
-            }/>
+            <View style={{flex:1}}>
+                <ListView
+                    style={{flex:1}}
+                    dataSource={this.state.dataSource}
+                    onEndReached={this._loadmore.bind(this)}
+                    renderFooter={this._renderFooter.bind(this)}
+                    renderRow={this.renderRow.bind(this)}
+                    onEndReachedThreshold = {29}
+                    refreshControl={
+                            <RefreshControl
+                            isRefreshing='true'
+                            refreshing={this.state.isRefreshing}
+                            onRefresh={this._refresh.bind(this)}
+                            tintColor='#aaaaaa'
+                            title='Loading...'
+                            progressBackgroundColor='#aaaaaa'/>
+                }/>
+                {snackBar}
+            </View>
         );
     }
 
@@ -105,7 +113,7 @@ class FinancingList extends React.Component {
         return (
             this.state.loadMore
             ? (<View style={[styles.indicatorWrapper]}>
-                <Animation timingLength = {50} duration = {500} bodyColor={'#aaaaaa'}/>
+                <Animation timingLength = {50} duration = {500} bodyColor={'#000'}/>
                 </View>)
             : (<View/>)
             )
@@ -138,7 +146,7 @@ class FinancingList extends React.Component {
     }
 
     async _loadmore () {
-        if (this.state.loadMore) {
+        if (this.state.loadMore||this.state.dataSource.getRowCount()==0) {
             return
          }
         this.setState({loadMore: true})
@@ -162,21 +170,95 @@ class FinancingList extends React.Component {
             })}
         })
     }
+    
+    transDate(endTime){
+      console.log( new Date(parseInt(endTime) ).toLocaleString().replace(/年|月/g, "-").replace(/日/g, " ")) ;
+    let mytime=new Array();
+    let timestamp = Date.parse(new Date());
+    let oldTime = parseInt(endTime);
+    let intervalTime = (oldTime -timestamp)/1000;
+
+    if((intervalTime/60/60/24)>=1){//>=1 day
+        let day = parseInt(intervalTime/60/60/24);
+        let hour = parseInt((intervalTime-(day*60*60*24))/60/60);
+        let min =parseInt((intervalTime-(day*60*60*24)-(hour*60*60))/60);
+        let sec = parseInt(intervalTime-(day*60*60*24)-(hour*60*60)-min*60);
+        mytime[0] =day;
+        mytime[1] =hour;
+        mytime[2] =min;
+        mytime[3] =sec;
+        return mytime;
+    }else if((intervalTime/60/60/24)<1 && (intervalTime/60/60)>=1){
+        let hour = parseInt((intervalTime)/60/60);
+        let min =parseInt((intervalTime-(hour*60*60))/60);
+        let sec = parseInt(intervalTime-(hour*60*60)-min*60);
+        mytime[0] =hour;
+        mytime[1] =min;
+        mytime[2] =sec;
+        return mytime;
+    }else if((intervalTime/60/60)<1 && (intervalTime/60)>=1){
+        let min =parseInt((intervalTime)/60);
+        let sec = parseInt(intervalTime-min*60);
+        mytime[0] ="00";
+        mytime[1] =min;
+        mytime[2] =sec;
+        return mytime;
+    }else if((intervalTime/60)<1 && intervalTime>0){
+        let sec = intervalTime;
+        mytime[0] ="00";
+        mytime[1] ="00";
+        mytime[2] =sec;
+        return mytime;
+    }else{
+        mytime[0] ="00";
+        mytime[1] ="00";
+        mytime[2] ="00";
+        return mytime;
+    }
+}
 
     renderRow(contentData, sectionID, highlightRow){
+        let artwork =contentData.artwork;
+        let master =contentData.master;
+        let mytime =this.transDate(artwork.investEndDatetime);
+        let progrssbar =(artwork.investsMoney/artwork.investGoalMoney)*(sizeWidth-24-47);
+        let percentage =artwork.investsMoney/artwork.investGoalMoney;
         return(
             <TouchableHighlight onPress= {this._skipIntoContent.bind(this,contentData)
             }>
             <View style={styles.row}>
-                <FinanItem item={contentData}></FinanItem>
+                 <View style={[styles0.btmbor,styles0.pb12,styles.pj_items]}>
+                        <ImgModule
+                            pic={artwork.picture_url}
+                            title={artwork.title}
+                            description={artwork.brief}
+                        />
+
+                        <HeadMaster newObj={{
+                            name:master.name,
+                            description:master.brief,
+                            pic:master.picture_url
+                        }}/>
+
+                        <ProgressBar newObj={{
+                            group1Num:artwork.investGoalMoney,
+                            group1Text:'目标金额',
+                            group2Num:mytime.length==3?mytime[0]+'时'+mytime[1]+'分'+mytime[2]+'秒':mytime[0]+'天'+mytime[1]+'时'+mytime[2]+'分',
+                            group2Text:'剩余时间',
+                            group3Num:artwork.investorsNum,
+                            group3Text:'投资人数',
+                            prograssBar:progrssbar,
+                            percentage:percentage,
+                        }}/>
+                    </View>
             </View>
             </TouchableHighlight>)
     }
 
     _skipIntoContent (contentData) {
         this.props.navigator.push({// 活动跳转，以Navigator为容器管理活动页面
-                component: project,
-                 title:'dd'
+                component: projectDetails,
+                contentData:contentData
               })
     }
 
@@ -209,7 +291,6 @@ class MakeList extends React.Component {
                             />
                         </View>
                     </View>
-
                     <View style={[styles0.btmbor,styles.pj_items]}>
                         <ImgModule
                             pic={'http://pro.efeiyi.com/product/%E8%8C%B6%E9%A9%AC%E5%8F%A4%E9%81%93120160113174841.jpg@!product-details-picture'}
@@ -425,10 +506,10 @@ const styles=StyleSheet.create({
         backgroundColor: '#F5FCFF',
     },
     indicatorWrapper: {
-        height: 45,
+        height: 80,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: '#252528'
+        backgroundColor: '#fff'
   },
 
 })
