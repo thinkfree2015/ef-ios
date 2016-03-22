@@ -36,7 +36,7 @@ export const [sizeWidth,sizeHeight]=[
 export class ArrowLeft extends React.Component {
     render(){
         return (
-            <View style={[styles.arrow,styles.aLeft]}></View>
+            <View style={[styles.arrow,styles.aLeft,{top:15}]}></View>
         );
     }
 }
@@ -57,7 +57,7 @@ export class Header extends Component {
                 {
                     //返回上一页
                     this.props.BackIcon?
-                    <TouchableOpacity style={[styles.h_left]} onPress={this.props.backPress} >
+                    <TouchableOpacity style={[styles.h_left],{width:44,height:44}} onPress={this.props.backPress} >
                         <ArrowLeft />
                     </TouchableOpacity>
                     :null

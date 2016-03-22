@@ -24,6 +24,7 @@ const requestUtils = {
     fetch(url,opts)
       .then((response) => response.text())
       .then((responseText) => {
+        console.log(responseText);
         success(JSON.parse(responseText));
       })
       .catch(function(err){

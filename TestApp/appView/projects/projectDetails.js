@@ -5,6 +5,9 @@ import React, {Component,StyleSheet,Image,Text,View,ScrollView,ListView,Touchabl
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 import {styles as styles0,Header,LayoutBtn,IconDiscuss,IconInvestment,IconDesTips,IconDesTipsGray,IconPayment,sizeHeight} from './../common/styles';
 import {TopImg,HeadMaster,TitleBar,DiscussMod,ProgressBar,ArtworkDetails,StickyBottom} from './../common/business';
+import RequestUtils from './../util/requestUtil';
+import { putJson, getJson} from '../util/jsonUtil';
+var timestamp=new Date().getTime();
 
 //主页面
 export default class ProjectDetails extends Component {
@@ -12,26 +15,56 @@ export default class ProjectDetails extends Component {
         super(props);
         this.state = {
             active:'false',
+            artworkid:'',
+            detail:{}, 
         };
+    }
+     componentDidMount() {  
+        //这里获取从FirstPageComponent传递过来的参数: id  
+            this.setState({  
+                artworkid:this.props.id,  
+            }); 
+            alert(this.state.artworkid);
+            this.fetchData(); 
+    } 
+    fetchData() {
+        RequestUtils.ajax({
+            url:'http://192.168.1.69:8001/app/investorArtWork.do',
+            method: 'post',
+            data:this.getDataJsonCode(),
+            success:(responseData)=>{
+                console.log("responseData"+responseData);
+                if (responseData.resultCode==0){
+                    this.setState({detail:responseData.object})
+                }
+             },
+            failure:(data)=>{}
+        })
+    } 
+    getDataJsonCode(){
+        let data='';
+        putJson('artWorkId',this.state.artWorkId);
+        putJson('timestamp',timestamp+"");
+        data =getJson();
+        console.log("data"+data);
+        return  data;
     }
     onkeyDown(){
         this.setState({active:!this.state.active});
     }
     popViewAction(){
-        alert('dd');
         this.props.navigator.pop()
     }
     render(){
         let wSzie=Math.floor((this.state.width/592)*100);
+
         return(
             <View style={[styles0.flex,{backgroundColor:'#fff'}]}>
                 <Header
-                    title={'逐鹿顺意铜雕'}
+                    title={this.state.detail.title}
                     BackIcon={true}
                     ShareIcon={true}
-                    backPress={function(){
-                        alert('dd');
-                    }}
+                    backPress={this.popViewAction.bind(this)}
                 />
                 <ScrollView>
                     {/*大图*/}

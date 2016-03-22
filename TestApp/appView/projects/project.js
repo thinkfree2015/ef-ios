@@ -16,13 +16,14 @@ import projectDetails from './projectDetails';
 //主页面
 export default class Home extends Component {
     render() {
+        const {navigator}=this.props;
         return (
             <View style={styles.container}>
             <ScrollableTabView tabBarUnderlineColor="#000" tabBarActiveTextColor ="#000" tabBarInactiveTextColor="#000">
-                <FinancingList tabLabel="融资" navigator={this.props.navigator}/>
-                <MakeList tabLabel="创作" navigator={this.props.navigator}/>
-                <AuctionList tabLabel="拍卖" navigator={this.props.navigator}/>
-                <AwardList tabLabel="抽奖" navigator={this.props.navigator}/>
+                <FinancingList tabLabel="融资" navigator={navigator}/>
+                <MakeList tabLabel="创作" navigator={navigator}/>
+                <AuctionList tabLabel="拍卖" navigator={navigator}/>
+                <AwardList tabLabel="抽奖" navigator={navigator}/>
             </ScrollableTabView>
             </View>
         )
@@ -65,7 +66,8 @@ class FinancingList extends React.Component {
             dataSource: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
             loadMore: false,
             isRefreshing: false,
-            isError: false
+            isError: false,
+            id:2
         }
     }
 
@@ -224,7 +226,7 @@ class FinancingList extends React.Component {
         let progrssbar =(artwork.investsMoney/artwork.investGoalMoney)*(sizeWidth-24-47);
         let percentage =artwork.investsMoney/artwork.investGoalMoney;
         return(
-            <TouchableHighlight onPress= {this._skipIntoContent.bind(this,contentData)
+            <TouchableHighlight onPress= {this._skipIntoContent.bind(this,contentData.artwork.id)
             }>
             <View style={styles.row}>
                  <View style={[styles0.btmbor,styles0.pb12,styles.pj_items]}>
@@ -255,21 +257,137 @@ class FinancingList extends React.Component {
             </TouchableHighlight>)
     }
 
-    _skipIntoContent (contentData) {
-        this.props.navigator.push({// 活动跳转，以Navigator为容器管理活动页面
-                component: projectDetails,
-                contentData:contentData
-              })
+    _skipIntoContent (id) { 
+        const {navigator}=this.props;
+        navigator.push({
+            component:projectDetails,
+            params: {
+                id: id,
+            }
+        })
     }
 
 }
 
 //创作
 class MakeList extends React.Component {
+    constructor (props) {
+        super(props)
+        this.pageIndex = 0
+        this.state = {
+            dataSource: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
+            loadMore: false,
+            isRefreshing: false,
+            isError: false
+        }
+    }
+
+    componentDidMount() {
+        this._refresh();
+    }
+    getLoginJsonData(pageNum){
+        var date = '';
+        putJson('pageSize',pageNum);
+        putJson('timestamp',new Date().getTime());
+        putJson('pageNum','1')
+        date = getJson();
+        return date;
+    }
+
     render() {
+        let snackBar = this.state.isError
+            ? (<SnackBar />)
+            : null
+        this.state.isError = false
         return (
-            <View style={styles0.flex}>
-                <ScrollView>
+            <View style={{flex:1}}>
+                <ListView
+                    style={{flex:1}}
+                    dataSource={this.state.dataSource}
+                    onEndReached={this._loadmore.bind(this)}
+                    renderFooter={this._renderFooter.bind(this)}
+                    renderRow={this.renderRow.bind(this)}
+                    onEndReachedThreshold = {29}
+                    refreshControl={
+                            <RefreshControl
+                            isRefreshing='true'
+                            refreshing={this.state.isRefreshing}
+                            onRefresh={this._refresh.bind(this)}
+                            tintColor='#aaaaaa'
+                            title='Loading...'
+                            progressBackgroundColor='#aaaaaa'/>
+                }/>
+                {snackBar}
+            </View>
+        );
+    }
+
+    _renderFooter () {
+        return (
+            this.state.loadMore
+            ? (<View style={[styles.indicatorWrapper]}>
+                <Animation timingLength = {50} duration = {500} bodyColor={'#000'}/>
+                </View>)
+            : (<View/>)
+            )
+    }
+
+    async _refresh () {
+        if (this.state.isRefreshing) {
+            return
+        }
+        this.setState({isRefreshing: true})
+        this.pageIndex=2;
+        RequestUtils.ajax({
+            url:'http://192.168.1.69:8001/app/investorIndex.do',
+            method: 'post',
+            data:this.getLoginJsonData(this.pageIndex),
+            success:(data)=>{
+                if (data.resultCode==0) {
+                    this.setState({
+                    dataSource: this.state.dataSource.cloneWithRows(data.objectList),
+                    isRefreshing: false
+                 })
+            }
+        },
+        failure:(data)=>{
+            this.setState({
+            isError: true,
+            isRefreshing: false
+            })}
+        })
+    }
+
+    async _loadmore () {
+        if (this.state.loadMore||this.state.dataSource.getRowCount()==0) {
+            return
+         }
+        this.setState({loadMore: true})
+        this.pageIndex += 2
+        RequestUtils.ajax({
+            url:'http://192.168.1.69:8001/app/investorIndex.do',
+            method: 'post',
+            data:this.getLoginJsonData(this.pageIndex),
+            success:(data)=>{
+            if (data.resultCode==0) {
+                    this.setState({
+                    dataSource: this.state.dataSource.cloneWithRows(data.objectList),
+                    loadMore: false
+             })
+            }
+        },
+        failure:(data)=>{
+            this.setState({
+            isError: true,
+            loadMore: false
+            })}
+        })
+    }
+
+     renderRow(contentData, sectionID, highlightRow){
+        return(
+            <View style={styles.row}>
+                 <View style={[styles0.btmbor,styles0.pb12,styles.pj_items]}>
                     <View style={[styles0.btmbor,styles.pj_items]}>
                         <ImgModule
                             pic={'http://pro.efeiyi.com/product/%E8%8C%B6%E9%A9%AC%E5%8F%A4%E9%81%93120160113174841.jpg@!product-details-picture'}
@@ -291,32 +409,8 @@ class MakeList extends React.Component {
                             />
                         </View>
                     </View>
-                    <View style={[styles0.btmbor,styles.pj_items]}>
-                        <ImgModule
-                            pic={'http://pro.efeiyi.com/product/%E8%8C%B6%E9%A9%AC%E5%8F%A4%E9%81%93120160113174841.jpg@!product-details-picture'}
-                            title={'项目详情'}
-                            description={'大师手作独品，倾心定制,独一无二,灵感再现倾心定制,独一无二'}
-                        />
-                        <HeadMaster newObj={{
-                            name:'朱炳仁2',
-                            description:'铜雕技艺国家级传承人',
-                            pic:'http://pro.efeiyi.com/product/%E8%8C%B6%E9%A9%AC%E5%8F%A4%E9%81%93120160113174841.jpg@!product-details-picture'
-                        }} />
-                        <View style={[styles0.topbor,styles0.ml12,styles0.mr12,styles.pj_info]}>
-                            <TextLine
-                                describe={'创作延时'}
-                            />
-                            <TextLine
-                                describe={'预计完工：2月28日'}
-                            />
-                        </View>
-                    </View>
-                </ScrollView>
-            </View>
-
-
-
-        )
+                </View>
+            </View>)
     }
 }
 //拍卖
@@ -506,7 +600,7 @@ const styles=StyleSheet.create({
         backgroundColor: '#F5FCFF',
     },
     indicatorWrapper: {
-        height: 80,
+        height: 45,
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: '#fff'
