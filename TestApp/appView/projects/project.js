@@ -92,6 +92,7 @@ class FinancingList extends React.Component {
                     onEndReached={this._loadmore.bind(this)}
                     renderFooter={this._renderFooter.bind(this)}
                     renderRow={this.renderRow.bind(this)}
+                    onEndReachedThreshold = {29}
                     refreshControl={
                             <RefreshControl
                             isRefreshing='true'
