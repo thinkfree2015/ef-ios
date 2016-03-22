@@ -17,6 +17,10 @@ export default class ProjectDetails extends Component {
     onkeyDown(){
         this.setState({active:!this.state.active});
     }
+    popViewAction(){
+        alert('dd');
+        this.props.navigator.pop()
+    }
     render(){
         let wSzie=Math.floor((this.state.width/592)*100);
         return(
@@ -25,6 +29,9 @@ export default class ProjectDetails extends Component {
                     title={'逐鹿顺意铜雕'}
                     BackIcon={true}
                     ShareIcon={true}
+                    backPress={function(){
+                        alert('dd');
+                    }}
                 />
                 <ScrollView>
                     {/*大图*/}

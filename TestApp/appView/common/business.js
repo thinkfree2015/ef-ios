@@ -480,6 +480,7 @@ const styles=StyleSheet.create({
     des_tbtext:{
         fontSize:14,
         color:'#fff',
+        backgroundColor:'transparent'
     },
     des_tpImg:{
         width:39,

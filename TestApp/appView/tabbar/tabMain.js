@@ -32,7 +32,7 @@ class tabMain extends Component {
               selected={true}
               badge={this.state.badges[0]}
               title='首页' >
-              <Navigation component={Home} />
+              <Home navigator={this.props.navigator} />
             </TabBar.Item>
             <TabBar.Item
               icon={require('./start_normall.png')}
