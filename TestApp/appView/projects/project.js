@@ -7,10 +7,10 @@ import {HeadMaster,ProgressBar} from './../common/business';
 import {styles as styles0} from './../common/styles';
 import RequestUtils from './../util/requestUtil';
 import {putJson,getJson} from './../util/jsonUtil';
-import Animation from './../projects/financing/Animation'
+import Animation from './../projects/financing/Animation';
 import projectDetails from './projectDetails';
 import FinanItem from './../projects/financing/financItem';
-import NavigationBar from 'react-native-navigationbar'
+
 
 //主页面
 export default class Home extends Component {
